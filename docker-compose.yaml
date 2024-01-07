@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+    database:
+        container_name: postgres
+        image: postgres:13.3-alpine
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: 12345
+            POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+            - "5432:5432"
+
+    hoverfly:
+        container_name: hoverfly
+        image: spectolabs/hoverfly:v1.3.4
+        command:
+            - "-webserver"
+            - "-response-body-files-path=/hoverfly_app/responses"
+            - "-import=/hoverfly_app/simulations/recommend.simulation.json"
+        volumes:
+            - "$PWD/hoverfly:/hoverfly_app:ro"
+        ports:
+            - "8500:8500"
